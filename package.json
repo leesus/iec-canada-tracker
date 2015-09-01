@@ -1,0 +1,29 @@
+{
+  "name": "iec-canada-tracker",
+  "version": "0.0.0",
+  "description": "Track changes to IEC canada page and email updates",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter dot --timeout 5000 --require babel/register **/*.spec.js",
+    "start": "babel-node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leesus/iec-canada-tracker.git"
+  },
+  "author": "leesus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leesus/iec-canada-tracker/issues"
+  },
+  "homepage": "https://github.com/leesus/iec-canada-tracker#readme",
+  "dependencies": {
+    "agenda": "^0.6.28",
+    "agenda-ui": "0.0.7",
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "mongoose": "^4.1.4",
+    "nodemailer": "^1.4.0",
+    "request": "^2.61.0"
+  }
+}
