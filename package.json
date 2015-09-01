@@ -21,9 +21,13 @@
     "agenda": "^0.6.28",
     "agenda-ui": "0.0.7",
     "babel": "^5.8.23",
+    "bcrypt": "^0.8.5",
     "express": "^4.13.3",
+    "jade": "^1.11.0",
     "mongoose": "^4.1.4",
     "nodemailer": "^1.4.0",
+    "passport": "^0.3.0",
+    "passport-local": "^1.0.0",
     "request": "^2.61.0"
   }
 }
