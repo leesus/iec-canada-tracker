@@ -3,6 +3,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
+import exphbs from 'express-handlebars';
 import favicon from 'serve-favicon';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -11,13 +12,14 @@ import compress from 'compression';
 import session from 'express-session';
 import validator from 'express-validator';
 import Store from 'connect-mongo';
+import passport from 'passport';
 
 // Routes
 import router from './routes';
 
 // Config
 import passportConfig from './config/passport';
-import config from '../config/secrets';
+import config from './config/secrets';
 
 let secrets = config[process.env.NODE_ENV || 'development'];
 let app = express();
@@ -28,14 +30,27 @@ mongoose.connect(secrets.db);
 mongoose.connection.on('error', () => console.error('MongoDB Connection Error. Make sure MongoDB is running.'));
 mongoose.connection.on('disconnect', () => mongoose.connect(secrets.db));
 
+// Setup handlebars
+let hbs = new exphbs.create({
+    layoutsDir: path.resolve(__dirname, 'views/shared'),
+    partialsDir: path.resolve(__dirname, 'views/shared'),
+    defaultLayout: 'layout',
+    helpers: {
+        checkedIf: function(condition) {
+            return (condition) ? 'checked' : '';
+        }
+    }
+});
+
 // middleware
 // view engine setup
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade')
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars')
 app.use(compress());
 app.use(validator());
-//app.use(favicon(path.join(__dirname, '/favicon.ico')));
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,19 +69,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, './public')));
 app.use((req, res, next) => {
-    if (req.user) res.cookie('user', JSON.stringify(req.user));
+    if (req.user) {
+        res.cookie('user', JSON.stringify(req.user));
+        res.locals.user = req.user;
+    }
     next();
 });
 
-import agenda from '../lib/agenda';
+import agenda from './service';
 import agendaUI from 'agenda-ui';
 
 app.set('port', process.env.PORT || 3000);
 
 // Agenda UI middleware
 app.use('/jobs', agendaUI(agenda, {poll: 30000}));
-
-//TODO: add route to change settings
+app.use(router);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -78,7 +95,7 @@ app.use((req, res, next) => {
 // Error handlers
 // Stacktraces passed
 app.use((err, req, res, next) => {
-    res.send(err.status || res.statusCode || 500, {
+    res.status(err.status || res.statusCode || 500).send({
         success: false,
         message: err.message,
         errors: err.errors || err

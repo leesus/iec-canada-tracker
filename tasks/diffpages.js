@@ -1,5 +1,6 @@
 'use strict';
 
+import SiteSetting from '../models/sitesetting'
 import Page from '../models/page';
 import sendMail from './email';
 
@@ -31,7 +32,12 @@ let diffPages = (url, body, done) => {
           }
 
           console.log('Updated saved page')
-          sendMail(done);
+          SiteSetting.find((err, settings) => {
+            if (settings.length && settings[0].emailAddresses.length && settings[0].emailAddresses[0] !== '' && settings[0].sendEmail) {
+              return sendMail(done);
+            }
+            return done();
+          });
         });
       } else {
         console.log('No changes')
