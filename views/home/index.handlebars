@@ -1,3 +1,15 @@
 <div class="container">
-	Hello, {{name}}!	
+  <div class="jumbotron">
+    <h1>IEC Canada Tracker</h1>
+    <p>Tracking changes to the IEC Canada WHV page.</p>
+    {{#if settings}}
+    <ul>
+      <li>Url: {{settings.url}}</li>
+      <li>Crawling: {{settings.crawling}}</li>
+      <li>Emailing updates: {{settings.emailing}}</li>
+    </ul>
+    <p>Page last updated {{formatDate settings.lastUpdated}}.</p>
+    {{/if}}
+    <p><a class="btn btn-primary btn-lg" href="/admin" role="button">Change settings</a><a class="btn btn-secondary btn-lg" href="/jobs" role="button">View running jobs</a></p>
+  </div>
 </div>

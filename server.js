@@ -2,6 +2,7 @@
 
 import express from 'express';
 import mongoose from 'mongoose';
+import moment from 'moment';
 import path from 'path';
 import exphbs from 'express-handlebars';
 import favicon from 'serve-favicon';
@@ -38,6 +39,9 @@ let hbs = new exphbs.create({
     helpers: {
         checkedIf: function(condition) {
             return (condition) ? 'checked' : '';
+        },
+        formatDate: function(date) {
+            return moment(date).fromNow();
         }
     }
 });
