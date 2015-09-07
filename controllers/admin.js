@@ -20,8 +20,10 @@ let save = (req, res, next) => {
 	SiteSetting.findOne({ environment: process.env.NODE_ENV || 'development' }, (err, settings) => {
 		if (err) return next(err);
 		
-		settings = settings || new SiteSetting();
-			
+		settings = settings || new SiteSetting({
+			environment: process.env.NODE_ENV || 'development'
+		});
+		
 		settings.url = req.body.url;
 		settings.schedule = req.body.schedule;
 		settings.emailAddresses = req.body.emailAddresses.split(/\s*,\s*/i);
@@ -30,8 +32,6 @@ let save = (req, res, next) => {
 		
 		settings.save((err, savedSettings) => {
 			if (err) return next(err);
-			
-			console.log('settings', savedSettings);
 			
 			if (savedSettings) {
 				if (savedSettings.crawl) {
