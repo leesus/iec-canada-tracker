@@ -1,17 +1,23 @@
 'use strict';
 
 import nodemailer from 'nodemailer';
+import nconf from 'nconf';
 import SiteSetting from '../models/sitesetting';
-import config from '../config/secrets.js';
 
-let secrets = config[process.env.NODE_ENV || 'development'];
+nconf.argv()
+     .env()
+     .file('../config/settings.json');
+
+const emailProvider = nconf.get('email:provider');
+const emailUsername = nconf.get('email:username');
+const emailPassword = nconf.get('email:password');
 
 // create reusable transporter object using SMTP transport 
 let transporter = nodemailer.createTransport({
-    service: secrets.email.provider,
+    service: emailProvider,
     auth: {
-        user: secrets.email.username,
-        pass: secrets.email.password
+        user: emailUsername,
+        pass: emailPassword
     },
     debug: true
 });

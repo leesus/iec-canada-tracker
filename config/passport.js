@@ -3,10 +3,7 @@
 import passport from 'passport';
 import Local from 'passport-local';
 import User from '../models/user';
-import config from './secrets';
 import mongoose from 'mongoose';
-
-let secrets = config[process.env.NODE_ENV || 'development'];
 
 // Passport strategies
 let LocalStrategy = Local.Strategy;

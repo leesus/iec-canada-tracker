@@ -14,22 +14,28 @@ import session from 'express-session';
 import validator from 'express-validator';
 import Store from 'connect-mongo';
 import passport from 'passport';
+import nconf from 'nconf';
 
 // Routes
 import router from './routes';
 
 // Config
 import passportConfig from './config/passport';
-import config from './config/secrets';
 
-let secrets = config[process.env.NODE_ENV || 'development'];
+nconf.argv()
+     .env()
+     .file('./config/settings.json');
+     
+const sessionSecret = nconf.get('session_secret');
+const dbConnectionString = nconf.get('db:connection_string');
+
 let app = express();
 let MongoStore = Store({ session: session });
 
 // Connect to mongo
-mongoose.connect(secrets.db);
+mongoose.connect(dbConnectionString);
 mongoose.connection.on('error', () => console.error('MongoDB Connection Error. Make sure MongoDB is running.'));
-mongoose.connection.on('disconnect', () => mongoose.connect(secrets.db));
+mongoose.connection.on('disconnect', () => mongoose.connect(dbConnectionString));
 
 // Setup handlebars
 let hbs = new exphbs.create({
@@ -48,7 +54,7 @@ let hbs = new exphbs.create({
 
 // middleware
 // view engine setup
-app.set('port', process.env.PORT || 3000);
+app.set('port', nconf.get('port') || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars')
@@ -60,9 +66,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({
-    secret: secrets.sessionSecret,
+    secret: sessionSecret,
     store: new MongoStore({
-        url: secrets.db,
+        url: dbConnectionString,
         autoReconnect: true,
         collection: 'session'
     }),
@@ -86,7 +92,9 @@ import agendaUI from 'agenda-ui';
 app.set('port', process.env.PORT || 3000);
 
 // Agenda UI middleware
-app.use('/jobs', agendaUI(agenda, {poll: 30000}));
+app.get('/jobs', agendaUI(agenda, {poll: 30000}));
+
+// Routes
 app.use(router);
 
 // Catch 404 and forward to error handler

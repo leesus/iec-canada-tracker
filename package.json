@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter dot --timeout 5000 --require babel/register **/*.spec.js",
-    "start": "babel-node ./index.js"
+    "dev": "babel-node ./index.js",
+    "build": "rm -rf ./www && mkdir ./www && babel ./ --ignore node_modules --out-dir www && cp -R views www/views && cp -R public www/public && cp package.json www/package.json;",
+    "start": "node ./www/index.js",
+    "bump:patch": "npm version patch && git push master",
+    "bump:minor": "npm version minor && git push master",
+    "bump:major": "npm version major && git push master"
   },
   "repository": {
     "type": "git",
@@ -34,6 +39,7 @@
     "moment": "^2.10.6",
     "mongoose": "^4.1.4",
     "morgan": "^1.6.1",
+    "nconf": "^0.7.2",
     "nodemailer": "^1.4.0",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",

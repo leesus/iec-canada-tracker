@@ -2,16 +2,21 @@
 
 import mongoose from 'mongoose';
 import Agenda from 'agenda';
+import nconf from 'nconf';
 import SiteSetting from './models/sitesetting.js';
 import Page from './models/page.js';
-import config from './config/secrets.js';
 import crawl from './tasks/crawl.js';
 
 let agenda = new Agenda();
-let secrets = config[process.env.NODE_ENV || 'development'];
+
+nconf.argv()
+     .env()
+     .file('./config/settings.json');
+
+const dbConnectionString = nconf.get('db:connection_string');
 
 // connect to db
-agenda.database(secrets.db);
+agenda.database(dbConnectionString);
 
 // unlock any jobs on restart
 agenda._db.update({lockedAt: {$exists: true } }, { $set : { lockedAt : null } }, (err, numUnlocked) => {

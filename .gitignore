@@ -28,5 +28,8 @@ node_modules
 
 # Secrets
 # Example included instead
-**/secrets.js
+config/settings.json
 seeduser.js
+
+# Compiled directory
+www
