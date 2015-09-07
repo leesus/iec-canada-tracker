@@ -11,6 +11,7 @@ let index = (req, res, next) => {
 			settings.emailAddresses = settings.emailAddresses.join();
 			return res.render('admin/index', { settings: settings });
 		}
+		
 		return res.render('admin/index');
 	});
 };
@@ -18,6 +19,8 @@ let index = (req, res, next) => {
 let save = (req, res, next) => {
 	SiteSetting.findOne({ environment: process.env.NODE_ENV || 'development' }, (err, settings) => {
 		if (err) return next(err);
+		
+		settings = settings || new SiteSetting();
 			
 		settings.url = req.body.url;
 		settings.schedule = req.body.schedule;
