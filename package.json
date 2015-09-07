@@ -1,6 +1,6 @@
 {
   "name": "iec-canada-tracker",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Track changes to IEC canada page and email updates",
   "main": "index.js",
   "scripts": {
