@@ -10,10 +10,10 @@ import crawl from './tasks/crawl.js';
 let agenda = new Agenda();
 
 nconf.argv()
-     .env()
+     .env({ separator: '__' })
      .file('./config/settings.json');
 
-const dbConnectionString = nconf.get('db:connection_string');
+const dbConnectionString = nconf.get('DB:CONNECTION_STRING');
 
 // connect to db
 agenda.database(dbConnectionString);

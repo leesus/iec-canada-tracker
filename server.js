@@ -23,11 +23,11 @@ import router from './routes';
 import passportConfig from './config/passport';
 
 nconf.argv()
-     .env()
+     .env({ separator: '__' })
      .file('./config/settings.json');
      
-const sessionSecret = nconf.get('session_secret');
-const dbConnectionString = nconf.get('db:connection_string');
+const sessionSecret = nconf.get('SESSION_SECRET');
+const dbConnectionString = nconf.get('DB:CONNECTION_STRING');
 
 let app = express();
 let MongoStore = Store({ session: session });

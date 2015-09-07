@@ -5,12 +5,12 @@ import nconf from 'nconf';
 import SiteSetting from '../models/sitesetting';
 
 nconf.argv()
-     .env()
+     .env({ separator: '__' })
      .file('../config/settings.json');
 
-const emailProvider = nconf.get('email:provider');
-const emailUsername = nconf.get('email:username');
-const emailPassword = nconf.get('email:password');
+const emailProvider = nconf.get('EMAIL:PROVIDER');
+const emailUsername = nconf.get('EMAIL:USERNAME');
+const emailPassword = nconf.get('EMAIL:PASSWORD');
 
 // create reusable transporter object using SMTP transport 
 let transporter = nodemailer.createTransport({
