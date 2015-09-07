@@ -45,5 +45,8 @@
     "passport-local": "^1.0.0",
     "request": "^2.61.0",
     "serve-favicon": "^2.3.0"
+  },
+  "peerDependencies": {
+    "mongodb": "1.4.x"
   }
 }
