@@ -92,7 +92,7 @@ import agendaUI from 'agenda-ui';
 app.set('port', process.env.PORT || 3000);
 
 // Agenda UI middleware
-app.get('/jobs', agendaUI(agenda, {poll: 30000}));
+app.use('/jobs', agendaUI(agenda, {poll: 30000}));
 
 // Routes
 app.use(router);
