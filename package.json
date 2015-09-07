@@ -8,9 +8,9 @@
     "dev": "babel-node ./index.js",
     "build": "rm -rf ./www && mkdir ./www && babel ./ --ignore node_modules --out-dir www && cp -R views www/views && cp -R public www/public && cp package.json www/package.json;",
     "start": "node ./www/index.js",
-    "bump:patch": "npm version patch && git push master",
-    "bump:minor": "npm version minor && git push master",
-    "bump:major": "npm version major && git push master"
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major"
   },
   "repository": {
     "type": "git",
