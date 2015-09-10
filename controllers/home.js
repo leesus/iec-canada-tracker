@@ -1,21 +1,26 @@
 'use strict';
 
+import nconf from '../load-config';
 import SiteSetting from '../models/sitesetting';
 import Page from '../models/page';
 
+const environment = nconf.get('NODE_ENV') || process.env.NODE_ENV;
+
 export default (req, res, next) => {
-	SiteSetting.findOne({ environment: process.env.NODE_ENV || 'development' }, (err, settings) => {
+	SiteSetting.findOne({ environment }, (err, settings) => {
 		if (err) return next(err);
 		
-		Page.find((err, pages) => {
+		const url = settings && settings.url;
+		
+		Page.findOne({ url }, (err, page) => {
 			if (err) return next(err);
 			
-			return res.render('home/index', settings && pages.length ? {
+			return res.render('home/index', settings && page ? {
 				settings: {
 					url: settings.url,
 					crawling: settings.crawl,
-					emailing: settings.sendEmail,
-					lastUpdated: pages[0].updated_date
+					emailing: settings.send_email,
+					lastUpdated: page.updated_date
 				}
 			} : null);
 		});

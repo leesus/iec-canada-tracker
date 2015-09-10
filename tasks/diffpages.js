@@ -1,8 +1,11 @@
 'use strict';
 
+import nconf from '../load-config';
 import SiteSetting from '../models/sitesetting'
 import Page from '../models/page';
 import sendMail from './email';
+
+const environment = nconf.get('NODE_ENV') || process.env.NODE_ENV; 
 
 let diffPages = (url, body, done) => {
   Page.findOne({ url: url }, (err, page) => {
@@ -32,8 +35,9 @@ let diffPages = (url, body, done) => {
           }
 
           console.log('Updated saved page')
-          SiteSetting.find((err, settings) => {
-            if (settings.length && settings[0].emailAddresses.length && settings[0].emailAddresses[0] !== '' && settings[0].sendEmail) {
+          SiteSetting.findOne({ environment }, (err, settings) => {
+            if (settings && settings.email_addresses.length && settings.email_addresses[0] !== '' && settings.send_email) {
+              console.log('Sending email to subscribers');
               return sendMail(done);
             }
             return done();

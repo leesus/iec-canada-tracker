@@ -2,18 +2,15 @@
 
 import mongoose from 'mongoose';
 import Agenda from 'agenda';
-import nconf from 'nconf';
+import nconf from './load-config';
 import SiteSetting from './models/sitesetting.js';
 import Page from './models/page.js';
 import crawl from './tasks/crawl.js';
 
 let agenda = new Agenda();
 
-nconf.argv()
-     .env({ separator: '__' })
-     .file('./config/settings.json');
-
 const dbConnectionString = nconf.get('DB:CONNECTION_STRING');
+const environment = nconf.get('NODE_ENV') || process.env.NODE_ENV;
 
 // connect to db
 agenda.database(dbConnectionString);
@@ -22,6 +19,17 @@ agenda.database(dbConnectionString);
 agenda._db.update({lockedAt: {$exists: true } }, { $set : { lockedAt : null } }, (err, numUnlocked) => {
   if (err) console.error(err);
   else console.log(`Unlocked ${numUnlocked} jobs.`);
+});
+
+// if we have settings already, start the service
+SiteSetting.findOne({ environment }, (err, settings) => {
+  if (err) {
+    return console.error(err);
+  }
+  
+  if (settings && settings.url && settings.crawl) {
+    return startJob(settings);
+  }
 });
 
 function startJob(siteSettings) {

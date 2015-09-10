@@ -9,8 +9,8 @@ let SiteSettingSchema = new Schema({
   url: { type: String, required: true },
   schedule: { type: String, required: true },
   crawl: { type: Boolean },
-  sendEmail: { type: Boolean },
-  emailAddresses: [{ type: String }],
+  send_email: { type: Boolean },
+  email_addresses: [{ type: String }],
   created_date: { type: Date, 'default': Date.now },
   updated_date: { type: Date, 'default': Date.now }
 });

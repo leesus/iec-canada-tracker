@@ -14,17 +14,13 @@ import session from 'express-session';
 import validator from 'express-validator';
 import Store from 'connect-mongo';
 import passport from 'passport';
-import nconf from 'nconf';
+import nconf from './load-config';
 
 // Routes
 import router from './routes';
 
 // Config
 import passportConfig from './config/passport';
-
-nconf.argv()
-     .env({ separator: '__' })
-     .file('./config/settings.json');
      
 const sessionSecret = nconf.get('SESSION_SECRET');
 const dbConnectionString = nconf.get('DB:CONNECTION_STRING');
@@ -70,7 +66,8 @@ app.use(session({
     store: new MongoStore({
         url: dbConnectionString,
         autoReconnect: true,
-        collection: 'session'
+        collection: 'session',
+        ttl: 10 * 60
     }),
     resave: false,
     saveUninitialized: false

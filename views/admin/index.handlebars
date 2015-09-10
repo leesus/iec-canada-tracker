@@ -21,12 +21,12 @@
 
           <div class="form-group">
             <label>Email addresses (comma separated)</label>
-            <input class="form-control input-lg" type="text" name="emailAddresses" placeholder="Email addresses" value="{{settings.emailAddresses}}">
+            <input class="form-control input-lg" type="text" name="emailAddresses" placeholder="Email addresses" value="{{settings.email_addresses}}">
           </div>
 
           <div class="checkbox">
             <label>
-              <input type="checkbox" name="sendEmail" value="{{settings.sendEmail}}" {{checkedIf settings.sendEmail}}> Send email to users?
+              <input type="checkbox" name="sendEmail" value="{{settings.send_email}}" {{checkedIf settings.send_email}}> Send email to users?
             </label>
           </div>
 
