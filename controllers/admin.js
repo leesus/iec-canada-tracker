@@ -23,7 +23,6 @@ let save = (req, res, next) => {
 	SiteSetting.findOne({ environment }, (err, settings) => {
 		if (err) return next(err);
 		
-		console.log(environment);
 		settings = settings || new SiteSetting({ environment });
 		
 		settings.url = req.body.url;
